@@ -1,5 +1,5 @@
 import os
-from typing import Optional, List
+from typing import Optional
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -18,7 +18,12 @@ class StreamValidationSettings(BaseSettings):
 
 class IntentClassificationSettings(BaseSettings):
     model_config = SettingsConfigDict(extra="ignore")
-    candidate_labels: Optional[List[str]] = ["fashion", "clothing"]
+    candidate_labels: Optional[dict] = {
+        "fashion": 1.0,
+        "clothing": 1.0,
+        "t-shirt": 1.0,
+        "red": 0.3,
+    }  # samples
     threshold: Optional[float] = 0.55
 
 
