@@ -8,7 +8,7 @@ from fastapi.responses import RedirectResponse
 
 from src.api import health, ws_api, intent_api
 from src.api.tags_metadata import tags_metadata
-from src.dependencies import get_app_settings
+from src.dependencies import get_app_settings, get_intent_classifier
 from src.logger import logger
 
 try:
@@ -30,6 +30,10 @@ async def api_lifespan(fa_app: FastAPI):
     load_dotenv()
     logger.info("Starting fashion chat service...")
     add_api_routers(fa_app)
+    # loading intent classifier model
+    logger.info("Downloading intent classifier model...")
+    get_intent_classifier()
+    logger.info("Intent classifier model downloaded.")
     yield
     # App Cleanup
     logger.info("Shutting down fashion chat service")

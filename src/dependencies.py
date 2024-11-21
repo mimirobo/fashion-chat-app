@@ -37,6 +37,7 @@ def get_openai_query_builder():
     return OpenAIQueryBuild()
 
 
+@lru_cache
 def get_intent_classifier():
     intent_settings = get_app_settings().intent_classifier
-    return IntentClassifierService(intent_settings)
+    return IntentClassifierService(settings=intent_settings)
