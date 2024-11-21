@@ -3,6 +3,7 @@ from functools import lru_cache
 from src.app_settings import AppSettings
 from src.clients.openai_client import OpenAIStreamingClient
 from src.services.client_manager import WebSocketConnectionManager
+from src.services.intent_classifier import IntentClassifierService
 from src.utils.openai_query_build import OpenAIQueryBuild
 from src.utils.validators.stream_validators import StreamValidatorBuilder
 
@@ -34,3 +35,8 @@ def get_connection_manager():
 
 def get_openai_query_builder():
     return OpenAIQueryBuild()
+
+
+def get_intent_classifier():
+    intent_settings = get_app_settings().intent_classifier
+    return IntentClassifierService(intent_settings)
