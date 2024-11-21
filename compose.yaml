@@ -1,0 +1,14 @@
+name: fashion-chat-app
+services:
+  fashion-chat-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    networks:
+      - fashion-chat-dev-network
+    ports:
+      - 8060:8080
+
+networks:
+  fashion-chat-dev-network:
+    external: true
