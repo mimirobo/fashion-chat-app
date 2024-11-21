@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
-from src.api import health, ws_api
+from src.api import health, ws_api, intent_api
 from src.api.tags_metadata import tags_metadata
 from src.dependencies import get_app_settings
 from src.logger import logger
@@ -21,6 +21,7 @@ except Exception as e:
 def add_api_routers(fa_app: FastAPI):
     fa_app.include_router(health.router, prefix="/health")
     fa_app.include_router(ws_api.router, prefix="/ws")
+    fa_app.include_router(intent_api.router, prefix="/intent")
 
 
 @asynccontextmanager
