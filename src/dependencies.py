@@ -1,6 +1,9 @@
 from functools import lru_cache
 
 from src.app_settings import AppSettings
+from src.clients.openai_client import OpenAIStreamingClient
+from src.services.client_manager import WebSocketConnectionManager
+from src.utils.openai_query_build import OpenAIQueryBuild
 from src.utils.validators.stream_validators import StreamValidatorBuilder
 
 
@@ -18,3 +21,16 @@ def get_stream_validator():
         .add_html_escape_validator()
         .build()
     )
+
+
+def get_openai_client():
+    openai_settings = get_app_settings().openai_client
+    return OpenAIStreamingClient(openai_settings)
+
+
+def get_connection_manager():
+    return WebSocketConnectionManager()
+
+
+def get_openai_query_builder():
+    return OpenAIQueryBuild()

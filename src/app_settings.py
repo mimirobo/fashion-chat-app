@@ -7,6 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class OpenAISettings(BaseSettings):
     model_config = SettingsConfigDict(extra="ignore")
     api_key: str
+    model: str = "gpt-4"
 
 
 class StreamValidationSettings(BaseSettings):
@@ -22,11 +23,11 @@ class AppSettings(BaseSettings):
     api_path_prefix: Optional[str] = "/"
     commit_sha: Optional[str] = os.getenv("COMMIT_SHA", "")
     environment: Optional[str] = os.getenv("ENVIRONMENT", "")
-    openai: OpenAISettings
+    openai_client: OpenAISettings
     stream_validation: StreamValidationSettings
 
     def __init__(self, *args, **kwargs):
-        kwargs["openai"] = OpenAISettings(
+        kwargs["openai_client"] = OpenAISettings(
             _env_file=kwargs["_env_file"], _env_prefix="OPENAI_"
         )
         kwargs["stream_validation"] = StreamValidationSettings(
