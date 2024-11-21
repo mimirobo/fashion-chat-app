@@ -1,8 +1,32 @@
 # Fashion Chat WebApp
 
-This repository contains the implementation of ...
+## Problem Statement
 
-[[_TOC_]]
+Fashion Chat WebApp is a FastAPI-based web application designed to focus exclusively on the topic of fashion.
+In a world where conversational AI often struggles to maintain topical consistency,
+this application aims to provide a seamless and focused user experience by ensuring that all queries and responses
+are relevant to the fashion domain.
+
+## Naive Approach
+
+To solve the problem of maintaining topical relevance, the application leverages **zero-shot intent classification**
+using the `facebook/bart-large-mnli` model from Hugging Face.
+When a user inputs a query, the model calculates the similarity score of the input text against predefined keywords.
+These keywords are assigned weights to reflect their importance in determining topical relevance.
+
+The weighted average is then computed to evaluate how closely the user's query aligns with the fashion domain.
+Based on this score, the application decides whether the query is fashion-related and generates an appropriate response.
+
+### Example Keywords and Weights (Defined via Environment Variables)
+```json
+{
+    "fashion": 1.0,
+    "clothing": 1.0,
+    "t-shirt": 1.0,
+    "red": 0.3
+}
+```
+
 
 ## Getting Started
 
