@@ -9,6 +9,12 @@ class OpenAISettings(BaseSettings):
     api_key: str
 
 
+class StreamValidationSettings(BaseSettings):
+    model_config = SettingsConfigDict(extra="ignore")
+    max_length: Optional[int] = 500
+    regex_pattern: Optional[str] = r"^[a-zA-Z0-9 .,!?-]+$"
+
+
 class AppSettings(BaseSettings):
     model_config = SettingsConfigDict(
         _env_file=".env", extra="ignore", validate_default=False
@@ -17,9 +23,13 @@ class AppSettings(BaseSettings):
     commit_sha: Optional[str] = os.getenv("COMMIT_SHA", "")
     environment: Optional[str] = os.getenv("ENVIRONMENT", "")
     openai: OpenAISettings
+    stream_validation: StreamValidationSettings
 
     def __init__(self, *args, **kwargs):
         kwargs["openai"] = OpenAISettings(
             _env_file=kwargs["_env_file"], _env_prefix="OPENAI_"
+        )
+        kwargs["stream_validation"] = StreamValidationSettings(
+            _env_file=kwargs["_env_file"], _env_prefix="STREAM_VALIDATION_"
         )
         super().__init__(*args, **kwargs)
