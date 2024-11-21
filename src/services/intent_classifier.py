@@ -20,14 +20,25 @@ class IntentClassifierService:
         result = await self._run_pipeline(text, self.settings.candidate_labels)
         return result
 
-    async def is_text_pertinent(self, text: str):
+    async def is_text_pertinent(self, text: str, reference_labels: dict):
         classes = await self.classify(text)
-        total_score = 0
-        for topic_class, score in classes.items():
-            total_score += score
+        weighted_score_sum = 0
+        total_weight = 0
 
-        average_score = total_score / len(classes)
-        return average_score > self.settings.threshold, classes
+        # Calculate the weighted sum and total weight
+        for topic_class, score in classes.items():
+            weight = reference_labels.get(
+                topic_class, 1
+            )  # Default weight is 1 if not found
+            weighted_score_sum += score * weight
+            total_weight += weight
+
+        # Calculate the weighted average score
+        weighted_average_score = (
+            weighted_score_sum / total_weight if total_weight != 0 else 0
+        )
+
+        return weighted_average_score > self.settings.threshold, classes
 
     async def _run_pipeline(self, text: str, candidate_labels: List[str]) -> dict:
         # Wrap the pipeline call in an async context for compatibility
