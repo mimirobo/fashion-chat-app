@@ -1,6 +1,6 @@
 import asyncio
 
-from transformers import pipeline
+from transformers import pipeline, Pipeline
 from typing import List
 
 from src.app_settings import IntentClassificationSettings
@@ -11,13 +11,16 @@ class IntentClassifierService:
     def __init__(self, settings: IntentClassificationSettings):
         # Initialize the zero-shot classification pipeline
         self.settings = settings
-        self.classifier = pipeline(
-            "zero-shot-classification", model="facebook/bart-large-mnli"
-        )
+        self.classifier = self.load_pipeline()
+
+    def load_pipeline(self) -> Pipeline:
+        return pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
 
     async def classify(self, text: str) -> dict:
         # Use the zero-shot classifier
-        result = await self._run_pipeline(text, self.settings.candidate_labels)
+        result = await self._run_pipeline(
+            text, list(self.settings.candidate_labels.keys())
+        )
         return result
 
     async def is_text_pertinent(self, text: str, reference_labels: dict):
