@@ -6,9 +6,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
-from src.api import (
-    health,
-)
+from src.api import health, ws_api
 from src.api.tags_metadata import tags_metadata
 from src.dependencies import get_app_settings
 from src.logger import logger
@@ -20,16 +18,17 @@ except Exception as e:
     sys.exit(-1)
 
 
-def add_api_routers(app: FastAPI):
-    app.include_router(health.router, prefix="/health")
+def add_api_routers(fa_app: FastAPI):
+    fa_app.include_router(health.router, prefix="/health")
+    fa_app.include_router(ws_api.router, prefix="/ws")
 
 
 @asynccontextmanager
-async def api_lifespan(app: FastAPI):
+async def api_lifespan(fa_app: FastAPI):
     # App Startup
     load_dotenv()
     logger.info("Starting fashion chat service...")
-    add_api_routers(app)
+    add_api_routers(fa_app)
     yield
     # App Cleanup
     logger.info("Shutting down fashion chat service")
